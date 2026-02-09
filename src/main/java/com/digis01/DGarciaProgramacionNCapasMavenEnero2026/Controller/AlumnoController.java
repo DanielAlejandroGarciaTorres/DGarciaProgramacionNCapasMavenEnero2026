@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -25,8 +27,32 @@ public class AlumnoController {
         return "AlumnoIndex";
     }
     
+    
     @GetMapping("form")
-    public String Accion (Model model){
+    public String Accion (Model model){ // Model / inyecta el modelo en la vista
+        model.addAttribute("alumno", new Alumno());
         return "AlumnoForm";
     }
+    
+    @PostMapping("form")
+    public String Accion (@ModelAttribute("alumno") Alumno alumno){ // ModelAttribrute - Obtiene las modificaciones ocurridas en el modelo
+        
+        /* 
+            1.GetAll
+            2.Form
+                .1 GET - Que la vista cargue todos los elementos.
+                .2 POST - Recuperar todos los elemento 
+            3 SQL
+                .1 UsuarioDireccionAddSP
+        
+            TRANSACCION 
+            Generar logica de inserción doble
+                - inserta usuario 
+                - inserta direccion 
+                *NOTA : todo en el mismo SP*
+        */
+        
+        return "AlumnoForm";
+    }
+    
 }

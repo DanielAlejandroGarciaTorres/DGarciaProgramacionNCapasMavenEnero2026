@@ -2,6 +2,7 @@ package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML;
 
 import java.util.Date;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Alumno {
 
@@ -11,8 +12,9 @@ public class Alumno {
     private String ApellidoMaterno;
     private String Telefono;
     private String Email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento; 
-    public Semestre Semestre;
+    public Semestre Semestre; 
     public List<Direccion> Direcciones;
 
     public Alumno() {
@@ -88,6 +90,12 @@ public class Alumno {
         this.FechaNacimiento = FechaNacimiento;
     }
     
+    public void setSemestre(Semestre Semestre) {
+        this.Semestre = Semestre;
+    }
     
+    public Semestre getSemestre(){
+        return Semestre;
+    }
 
 }
