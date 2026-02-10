@@ -1,9 +1,12 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Controller;
 
+import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.PaisDAOImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno;
+import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Result;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("alumno")
 public class AlumnoController {
 
+    // injection usuarioDAOIMplementation
+    // injection paisDAOImplementation
+    @Autowired
+    private PaisDAOImplementation paisDAOImplementation;
+    
     @GetMapping //localhost:8080/alumno
     public String Index(Model model){
         List<Alumno> alumnos = new ArrayList<>();
@@ -31,12 +39,16 @@ public class AlumnoController {
     @GetMapping("form")
     public String Accion (Model model){ // Model / inyecta el modelo en la vista
         model.addAttribute("alumno", new Alumno());
+        Result resultPaises = paisDAOImplementation.GetAll();
+        model.addAttribute("paises", resultPaises.objects);
+//        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
         return "AlumnoForm";
     }
     
     @PostMapping("form")
     public String Accion (@ModelAttribute("alumno") Alumno alumno){ // ModelAttribrute - Obtiene las modificaciones ocurridas en el modelo
         
+//        Result result = alumnoDAOImplementation.Add(alumno);
         /* 
             1.GetAll
             2.Form

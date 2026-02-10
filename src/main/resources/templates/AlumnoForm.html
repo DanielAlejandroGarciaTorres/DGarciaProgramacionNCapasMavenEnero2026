@@ -95,7 +95,7 @@
                         <label for="paisddl" class="form-label fw-bold">Pais</label>
                         <select id="ddlpais" class="form-select" aria-label="Default select example" >
                             <option value=0 selected>Selecciona un pais</option>
-                            <option value=1>México</option>
+                            <option th:each="pais : ${paises}" th:value="${pais.IdPais}" th:text="${pais.Nombre}"></option>
                         </select>
                     </div>
                     <div class="col-md-3">

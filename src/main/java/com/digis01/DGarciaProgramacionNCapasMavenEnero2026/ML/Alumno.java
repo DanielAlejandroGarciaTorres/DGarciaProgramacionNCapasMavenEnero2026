@@ -98,4 +98,13 @@ public class Alumno {
         return Semestre;
     }
 
+    public List<Direccion> getDirecciones() {
+        return Direcciones;
+    }
+
+    public void setDirecciones(List<Direccion> Direcciones) {
+        this.Direcciones = Direcciones;
+    }
+
+    
 }
