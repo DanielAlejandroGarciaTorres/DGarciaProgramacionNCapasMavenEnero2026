@@ -6,6 +6,14 @@ public class Estado {
     private String Nombre;
     public com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Pais Pais;
 
+    public Estado() {
+    }
+    
+    public Estado(int IdEstado, String Nombre) {
+        this.IdEstado = IdEstado;
+        this.Nombre = Nombre;
+    }
+    
     public int getIdEstado() {
         return IdEstado;
     }

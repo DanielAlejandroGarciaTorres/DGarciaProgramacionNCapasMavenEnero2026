@@ -17,7 +17,6 @@ public class PaisDAOImplementation implements IPais {
         Result result = new Result();
 
         try {
-
             // aqui llamo a jdbcTemplate
             result.objects = new ArrayList<>();
             result.objects.add(new Pais(1, "México"));

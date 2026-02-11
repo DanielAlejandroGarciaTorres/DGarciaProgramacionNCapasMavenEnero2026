@@ -1,7 +1,9 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Controller;
 
+import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.AlumnoDAOImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.PaisDAOImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno;
+import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Estado;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Result;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,8 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("alumno")
@@ -21,17 +25,16 @@ public class AlumnoController {
     // injection usuarioDAOIMplementation
     // injection paisDAOImplementation
     @Autowired
+    private AlumnoDAOImplementation alumnoDAOImplementation;
+    
+    @Autowired
     private PaisDAOImplementation paisDAOImplementation;
     
     @GetMapping //localhost:8080/alumno
     public String Index(Model model){
-        List<Alumno> alumnos = new ArrayList<>();
-        alumnos.add(new Alumno(1, "Hernan", "Martinez", "Bruno", "5588996633", "hmartinez@email.com", new Date()));
-        alumnos.add(new Alumno(2, "Fernando", "Cruz", "Velazquez", "5588996632", "fcruz@email.com", new Date()));
-        alumnos.add(new Alumno(3, "Miguel Fernando", "Pastrana", "Adame", "5588996631", "mpastrana@email.com", new Date()));
-        alumnos.add(new Alumno(4, "Diego", "Gomez", "Tagle", "5588996630", "dgomez@email.com", new Date()));
         
-        model.addAttribute("alumnos", alumnos);
+        Result result = alumnoDAOImplementation.GetAll();
+        model.addAttribute("alumnos", result.objects);
         return "AlumnoIndex";
     }
     
@@ -66,5 +69,23 @@ public class AlumnoController {
         
         return "AlumnoForm";
     }
+    
+    
+    
+    
+    @GetMapping("getEstadosByPais/{IdPais}")
+    @ResponseBody // el metodo retorna un dato estructurado (JSON) y no una vista
+    public Result GetEstadosByPais(@PathVariable("IdPais") int IdPais){
+//        estadoDAOImplementation.getEstadosByPais(IdPais);
+        Result result = new Result();
+        result.objects = new ArrayList<>();
+        result.objects.add(new Estado(1,"CDMX"));
+        result.objects.add(new Estado(2,"Veracruz"));
+        result.objects.add(new Estado(3,"Esto de México"));
+        result.correct = true;
+        
+        return result;
+    }
+    
     
 }
