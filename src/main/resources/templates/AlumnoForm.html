@@ -118,6 +118,9 @@
                     <div class="col-md-3">
                         <label for="CodigoPostal" class="form-label fw-bold">Codigo Postal</label>
                         <input id="CodigoPostal" type="text" class="form-control" placeholder="Codigo Postal">
+                        
+                                                <input id="date" type="date" class="form-control" placeholder="Codigo Postal">
+
 
                     </div>
                 </div>
@@ -130,6 +133,43 @@
     </body>
 
     <script>
+        
+        function SoloLetras(input, event){         
+            console.log(input) //this
+            //console.log(event) //event
+            var valorCompleto = $(input).val() + event.key      
+            console.log(valorCompleto)
+            
+            console.log("ID:", input.id)
+            
+            var regex = /^[a-zA-Z]+$/;
+        
+            if(regex.test(valorCompleto)){
+                console.log("Paso la expresion regular")
+                $('#error'+input.id+'').text('')
+                $(input).removeClass('border border-danger')
+            }else{
+                console.log("NO paso la expresion regular")  
+                event.preventDefault()
+                $(input).addClass('border border-danger') 
+                $('#error'+input.id+'').text('Solo letras').css('color', 'red')
+            }        
+            //console.log("Funcionando")
+        }
+             
+        function SoloLetrasBlur(input){         
+            var regex = /^[a-zA-Z]+$/;      
+            if(regex.test($(input).val())){
+                console.log("Paso la expresion regular")
+                $('#error'+input.id+'').text('')
+                $(input).removeClass('border border-danger')
+                $(input).addClass('border border-success') 
+            } 
+        }
+        
+        
+        
+        
         $(document).ready(function () {
 
             console.log("Ya termine de carga la página");
