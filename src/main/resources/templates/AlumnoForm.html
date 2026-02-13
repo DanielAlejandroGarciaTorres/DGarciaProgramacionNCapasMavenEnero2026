@@ -25,19 +25,22 @@
                         <div class="card p-3 h-100">
                             <div class="mb-3">
                                 <label for="NombreAlumno" class="form-label fw-bold">Nombre</label>
-                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Nombre}">
+                                <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Nombre}" onkeypress="SoloLetras(this, event)", onblur="SoloLetrasBlur(this)">
+                                <span id="errorNombreAlumno" ></span>
                                 <span class="text-danger" th:if="${#fields.hasErrors('Nombre')}" th:errors="*{Nombre}"></span>
                             </div>
                             <div class="row">
                                 <div class="col mb-3">
                                     <label for="ApellidoPaternoAlumno" class="form-label fw-bold">Apellido Paterno</label>
-                                    <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}">
+                                    <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" onkeypress="SoloLetras(this, event)", onblur="SoloLetrasBlur(this)">
+                                    <span id="errorApellidoPaternoAlumno"></span>
 
 
                                 </div>
                                 <div class="col mb-3">
                                     <label for="ApellidoMaternoAlumno" class="form-label fw-bold">Apellido Materno</label>
-                                    <input id="ApellidoMaternoAlumno" type="text" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}">
+                                    <input id="ApellidoMaternoAlumno" type="text" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}" onkeypress="SoloLetras(this, event)", onblur="SoloLetrasBlur(this)">
+                                    <span id="errorApellidoMaternoAlumno"></span>
                                 </div>
                             </div>
                             <div class="row">
