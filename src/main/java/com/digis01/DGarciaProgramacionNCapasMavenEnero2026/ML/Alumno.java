@@ -1,5 +1,10 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -7,13 +12,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Alumno {
 
     private int IdAlumno;
+//    @Pattern(regexp = "",message = "Solo acepto letras")
+    @NotNull(message = "No puedo ser nulo")
+    @NotEmpty(message = "No puedo ser vacio")
+    @Size(min = 3, max = 50, message = "más de 2 letras min")
     private String Nombre;
     private String ApellidoPaterno;
     private String ApellidoMaterno;
     private String Telefono;
+    
     private String Email;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date FechaNacimiento; 
+    private Date FechaNacimiento;
+    @Valid
     public Semestre Semestre; 
     public List<Direccion> Direcciones;
 
