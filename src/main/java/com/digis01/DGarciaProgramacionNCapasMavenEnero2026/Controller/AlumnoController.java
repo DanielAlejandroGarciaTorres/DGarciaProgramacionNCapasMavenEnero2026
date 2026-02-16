@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("alumno")
@@ -50,14 +52,27 @@ public class AlumnoController {
     }
 
     @PostMapping("form")
-    public String Accion(@Valid @ModelAttribute("alumno") Alumno alumno, BindingResult bindingResult, Model model) { // ModelAttribrute - Obtiene las modificaciones ocurridas en el modelo
+    public String Accion(@Valid @ModelAttribute("alumno") Alumno alumno, BindingResult bindingResult, @RequestParam("imagenFile") MultipartFile imagenFile ,Model model) { // ModelAttribrute - Obtiene las modificaciones ocurridas en el modelo
 
         if(bindingResult.hasErrors()){
             model.addAttribute("alumno", alumno);
             return "AlumnoForm";
         }
         
-        //proceso de agregar datos.
+        String nombreArchivo = imagenFile.getOriginalFilename(); //Nxus.png / personita.jpg
+        //1. Expresión regular 
+        //2. Cortar la palabra
+        String[] cadena = nombreArchivo.split("\\.");
+        if (cadena[1].equals("jpg") || cadena[1].equals("png")) {
+            //convierto imagen a base 64, y la cargo en el modelo alumno 
+            System.out.println("Imagen");
+            // realizar la conversión de imagen a base 64; 
+        } else if (imagenFile != null){
+            //retorno error de archivo no permititido y regreso a formulario 
+            System.out.println("Error");
+        }
+        System.out.println("Agregar");
+        //proceso de agregar datos y retorno a vista de todos los usuarios
         return "redirect:/alumno";
     }
 
