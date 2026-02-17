@@ -6,9 +6,13 @@ import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Estado;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Result;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,13 +70,21 @@ public class AlumnoController {
         if (cadena[1].equals("jpg") || cadena[1].equals("png")) {
             //convierto imagen a base 64, y la cargo en el modelo alumno 
             System.out.println("Imagen");
-            // realizar la conversión de imagen a base 64; 
+            try {
+                // realizar la conversión de imagen a base 64;
+                byte[] arregloBytes = imagenFile.getBytes();
+                String base64Img = Base64.getEncoder().encodeToString(arregloBytes);
+                alumno.setImagen(base64Img);
+            } catch (Exception ex) {
+                return "AlumnoForm";
+            }
         } else if (imagenFile != null){
             //retorno error de archivo no permititido y regreso a formulario 
             System.out.println("Error");
         }
         System.out.println("Agregar");
         //proceso de agregar datos y retorno a vista de todos los usuarios
+        alumnoDAOImplementation.Add(alumno); 
         return "redirect:/alumno";
     }
 
