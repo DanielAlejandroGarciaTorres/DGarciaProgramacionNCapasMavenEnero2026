@@ -83,7 +83,10 @@ public class AlumnoDAOImplementation implements IAlumno {
 
     @Override
     public Result Add(Alumno alumno) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Result result = new Result();
+
+        
+        return result ;
     }
 
 //    @Autowired // Inyección de dependencias
