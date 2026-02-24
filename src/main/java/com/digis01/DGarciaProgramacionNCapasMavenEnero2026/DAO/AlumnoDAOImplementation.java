@@ -84,7 +84,7 @@ public class AlumnoDAOImplementation implements IAlumno {
     @Override
     public Result Add(Alumno alumno) {
         Result result = new Result();
-
+        result.correct = true;
         
         return result ;
     }

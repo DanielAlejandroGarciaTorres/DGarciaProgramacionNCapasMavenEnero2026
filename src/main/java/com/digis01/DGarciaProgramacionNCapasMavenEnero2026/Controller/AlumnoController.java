@@ -3,10 +3,14 @@ package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Controller;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.AlumnoDAOImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.PaisDAOImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno;
+import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.ErroresArchivo;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Estado;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Result;
 import jakarta.validation.Valid;
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -44,6 +48,15 @@ public class AlumnoController {
 
         Result result = alumnoDAOImplementation.GetAll();
         model.addAttribute("alumnos", result.objects);
+        model.addAttribute("alumnoBusqueda", new Alumno());
+        return "AlumnoIndex";
+    }
+
+    @PostMapping
+    public String Index(Model model, @ModelAttribute("alumnoBusqueda") Alumno alumnoBusqueda) {
+//        Result result = alumnoDAOImplementation.GetAllBusqueda(alumnoBusqueda);
+//        model.addAttribute("alumnos", result.objects);
+//        model.addAttribute("alumnoBusqueda", alumnoBusqueda);
         return "AlumnoIndex";
     }
 
@@ -57,17 +70,17 @@ public class AlumnoController {
     }
 
     @PostMapping("form")
-    public String Accion(@Valid @ModelAttribute("alumno") Alumno alumno, 
-            BindingResult bindingResult, 
+    public String Accion(@Valid @ModelAttribute("alumno") Alumno alumno,
+            BindingResult bindingResult,
             @RequestParam("imagenFile") MultipartFile imagenFile,
             Model model,
             RedirectAttributes redirectAttributes) { // ModelAttribrute - Obtiene las modificaciones ocurridas en el modelo
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             model.addAttribute("alumno", alumno);
             return "AlumnoForm";
         }
-        
+
         String nombreArchivo = imagenFile.getOriginalFilename(); //Nxus.png / personita.jpg
         //1. Expresión regular 
         //2. Cortar la palabra
@@ -83,24 +96,83 @@ public class AlumnoController {
             } catch (Exception ex) {
                 return "AlumnoForm";
             }
-        } else if (imagenFile != null){
+        } else if (imagenFile != null) {
             //retorno error de archivo no permititido y regreso a formulario 
             System.out.println("Error");
         }
         System.out.println("Agregar");
         //proceso de agregar datos y retorno a vista de todos los usuarios
-        Result result = alumnoDAOImplementation.Add(alumno); 
-        
+        Result result = alumnoDAOImplementation.Add(alumno);
+
         if (result.correct) {
             redirectAttributes.addFlashAttribute("successMesage", "El recurso se agrego de forma correcta");
             return "redirect:/alumno";
         } else {
-            model.addAttribute("errorMessage", "El recurso no se pudo crear: " + result.errorMessage );
+            model.addAttribute("errorMessage", "El recurso no se pudo crear: " + result.errorMessage);
             model.addAttribute("alumno", alumno);
             return "AlumnoForm";
         }
+
+    }
+
+    @GetMapping("/cargamasiva")
+    public String CargaMasiva() {
+        return "CargaMasiva";
+    }
+
+    @PostMapping("/cargamasiva")
+    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo) {
+        try {
+            if (archivo != null) {
+
+                String rutaBase = System.getProperty("user.dir");
+                String rutaCarpeta = "src/main/resources/archivosCM";
+                String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSS"));
+                String nombreArchivo = fecha + archivo.getOriginalFilename();
+                String rutaArchivo = rutaBase + "/" + rutaCarpeta + "/" + nombreArchivo;
+                String extension = archivo.getOriginalFilename().split("\\.")[1];
+                List<Alumno> alumnos = null;
+                if (extension.equals("txt")) {
+                    archivo.transferTo(new File(rutaArchivo));
+//                    alumnos = LecturaArchivoTxt();
+                } else if (extension.equals("xlsx")) {
+
+                } else {
+                    System.out.println("Extensión erronea, manda archivos del formato solicitado");
+                }
+
+                ValidarDatos(alumnos);
+
+                /*
+                    - insertarlos
+                    - renderizar la lista de errores
+                 */
+            }
+        } catch (Exception ex) {
+            // notificación de error
+
+            System.out.println(ex.getLocalizedMessage());
+        }
+        return "CargaMasiva";
+    }
+
+    public List<Alumno> LecturaArchivoTxt(File archivo) {
+        List<Alumno> alumnos = new ArrayList<>();
+        /*
+            apertura de archivo
+            lectura de datos
+         */
+        return alumnos;
+    }
+
+    public List<ErroresArchivo> ValidarDatos(List<Alumno> alumnos) {
+        List<ErroresArchivo> errores = new ArrayList<>();
+
+        /*Validar
         
-        
+        Validator
+         */
+        return errores;
     }
 
     @GetMapping("getEstadosByPais/{IdPais}")
