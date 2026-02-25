@@ -22,6 +22,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -147,7 +150,8 @@ public class AlumnoController {
                     archivo.transferTo(new File(rutaArchivo));
                     alumnos = LecturaArchivoTxt(new File(rutaArchivo));
                 } else if (extension.equals("xlsx")) {
-
+                    archivo.transferTo(new File(rutaArchivo));
+                    alumnos = LecturaArchivoXLSX(new File(rutaArchivo));
                 } else {
                     System.out.println("Extensión erronea, manda archivos del formato solicitado");
                 }
@@ -155,7 +159,7 @@ public class AlumnoController {
                 List<ErroresArchivo> errores = ValidarDatos(alumnos);
 
                 if (errores.isEmpty()) {
-//                    se guarda info
+//                    se guarda info -- no puedo mandar la ruta al front
                 } else {
 //                    retorno lista errores, y la renderizo.
                 }
@@ -172,6 +176,17 @@ public class AlumnoController {
         return "CargaMasiva";
     }
 
+    @GetMapping("/cargamasiva/procesar")
+    public String ProcesarCargaMasiva(RedirectAttributes redirectAttributes){
+        /*Procesar
+        Aperturar archivo
+        Inertar datos
+        */
+        // mensaje de confirmación de carga exitosa
+        return "redirect:/alumno";
+    }
+    
+    
     public List<Alumno> LecturaArchivoTxt(File archivo) {
         List<Alumno> alumnos;
         //try with reouces - Garbage collector
@@ -197,6 +212,31 @@ public class AlumnoController {
         return alumnos;
     }
 
+    public List<Alumno> LecturaArchivoXLSX(File archivo){
+        List<Alumno> alumnos = null;
+        
+        try (InputStream inputStream = new FileInputStream(archivo);
+                XSSFWorkbook workbook = new XSSFWorkbook(inputStream)){
+            
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            
+            alumnos = new ArrayList<>();
+            
+            for (Row row : sheet) {
+                Alumno alumno = new Alumno();
+                
+                alumno.setNombre(row.getCell(0).toString());
+                alumno.setApellidoPaterno(row.getCell(1).toString());
+                
+                alumnos.add(alumno);
+            }
+            
+        } catch (Exception ex) {
+        }
+        
+        return alumnos;
+    }
+    
     public List<ErroresArchivo> ValidarDatos(List<Alumno> alumnos) {
         List<ErroresArchivo> errores = new ArrayList<>();
         
