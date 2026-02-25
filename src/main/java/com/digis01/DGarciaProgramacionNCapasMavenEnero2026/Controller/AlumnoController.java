@@ -6,9 +6,14 @@ import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.ErroresArchivo;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Estado;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Result;
+import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Service.ValidationService;
 import jakarta.validation.Valid;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +49,9 @@ public class AlumnoController {
     @Autowired
     private PaisDAOImplementation paisDAOImplementation;
 
+    @Autowired
+    private ValidationService validationService;
+    
     @GetMapping //localhost:8080/alumno
     public String Index(Model model) {
 
@@ -60,6 +69,8 @@ public class AlumnoController {
         return "AlumnoIndex";
     }
 
+    
+    
     @GetMapping("form")
     public String Accion(Model model) { // Model / inyecta el modelo en la vista
         model.addAttribute("alumno", new Alumno());
@@ -134,15 +145,20 @@ public class AlumnoController {
                 List<Alumno> alumnos = null;
                 if (extension.equals("txt")) {
                     archivo.transferTo(new File(rutaArchivo));
-//                    alumnos = LecturaArchivoTxt();
+                    alumnos = LecturaArchivoTxt(new File(rutaArchivo));
                 } else if (extension.equals("xlsx")) {
 
                 } else {
                     System.out.println("Extensión erronea, manda archivos del formato solicitado");
                 }
 
-                ValidarDatos(alumnos);
+                List<ErroresArchivo> errores = ValidarDatos(alumnos);
 
+                if (errores.isEmpty()) {
+//                    se guarda info
+                } else {
+//                    retorno lista errores, y la renderizo.
+                }
                 /*
                     - insertarlos
                     - renderizar la lista de errores
@@ -157,21 +173,49 @@ public class AlumnoController {
     }
 
     public List<Alumno> LecturaArchivoTxt(File archivo) {
-        List<Alumno> alumnos = new ArrayList<>();
-        /*
-            apertura de archivo
-            lectura de datos
-         */
+        List<Alumno> alumnos;
+        //try with reouces - Garbage collector
+        try(InputStream inputStream = new FileInputStream(archivo);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))){
+            
+            alumnos = new ArrayList<>();
+            String cadena = "";
+            while ( (cadena = bufferedReader.readLine()) != null) {                
+//                Nombre|ApellidoPaterno|Materno|Fecha
+                String[] datosAlumno = cadena.split("\\|");
+                Alumno alumno = new Alumno();
+                alumno.setNombre(datosAlumno[0]);
+                alumno.setApellidoPaterno(datosAlumno[1]);
+                
+                alumnos.add(alumno);
+            }
+            
+        }catch(Exception ex){
+            return null;
+        }
+        
         return alumnos;
     }
 
     public List<ErroresArchivo> ValidarDatos(List<Alumno> alumnos) {
         List<ErroresArchivo> errores = new ArrayList<>();
-
-        /*Validar
         
-        Validator
-         */
+        for (Alumno alumno : alumnos) {
+            BindingResult bindingResult = validationService.ValidateObject(alumno);
+            
+            if (bindingResult.hasErrors()) {
+                for (ObjectError objectError : bindingResult.getAllErrors()) {
+                    ErroresArchivo erroresArchivo = new ErroresArchivo();
+//                    erroresArchivo.dato = objectError.getObjectName();
+                }
+            }
+            
+        
+        }
+        
+        
+        
+        
         return errores;
     }
 
