@@ -7,6 +7,7 @@ import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.ErroresArchivo;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Estado;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Result;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Service.ValidationService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -54,7 +56,7 @@ public class AlumnoController {
 
     @Autowired
     private ValidationService validationService;
-    
+
     @GetMapping //localhost:8080/alumno
     public String Index(Model model) {
 
@@ -72,8 +74,6 @@ public class AlumnoController {
         return "AlumnoIndex";
     }
 
-    
-    
     @GetMapping("form")
     public String Accion(Model model) { // Model / inyecta el modelo en la vista
         model.addAttribute("alumno", new Alumno());
@@ -135,7 +135,7 @@ public class AlumnoController {
     }
 
     @PostMapping("/cargamasiva")
-    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo) {
+    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo, Model model, HttpSession session) {
         try {
             if (archivo != null) {
 
@@ -160,8 +160,13 @@ public class AlumnoController {
 
                 if (errores.isEmpty()) {
 //                    se guarda info -- no puedo mandar la ruta al front
+                    model.addAttribute("errores", false);
+                    //UUID
+                    session.setAttribute("ruta", rutaArchivo);
+//                    model.addAllAttributes("llaveRuta", "clave");
                 } else {
 //                    retorno lista errores, y la renderizo.
+                    model.addAttribute("errores", true);
                 }
                 /*
                     - insertarlos
@@ -177,85 +182,93 @@ public class AlumnoController {
     }
 
     @GetMapping("/cargamasiva/procesar")
-    public String ProcesarCargaMasiva(RedirectAttributes redirectAttributes){
+    public String ProcesarCargaMasiva(RedirectAttributes redirectAttributes, HttpSession session) {
+        
+        String rutaArchivo = session.getAttribute("ruta").toString();
+        List<Alumno> alumnos = LecturaArchivoXLSX(new File(rutaArchivo));
+        
+        Result result = alumnoDAOImplementation.AddAll(alumnos); 
         /*Procesar
         Aperturar archivo
         Inertar datos
-        */
+         */
         // mensaje de confirmación de carga exitosa
         return "redirect:/alumno";
     }
+
+    /*
+    Status  1 o 0 - NUMBER(1) - default 1
+    */
     
     
     public List<Alumno> LecturaArchivoTxt(File archivo) {
         List<Alumno> alumnos;
         //try with reouces - Garbage collector
-        try(InputStream inputStream = new FileInputStream(archivo);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))){
-            
+        try (InputStream inputStream = new FileInputStream(archivo); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+
             alumnos = new ArrayList<>();
             String cadena = "";
-            while ( (cadena = bufferedReader.readLine()) != null) {                
+            while ((cadena = bufferedReader.readLine()) != null) {
 //                Nombre|ApellidoPaterno|Materno|Fecha
                 String[] datosAlumno = cadena.split("\\|");
                 Alumno alumno = new Alumno();
                 alumno.setNombre(datosAlumno[0]);
                 alumno.setApellidoPaterno(datosAlumno[1]);
-                
+
                 alumnos.add(alumno);
             }
-            
-        }catch(Exception ex){
+
+        } catch (Exception ex) {
             return null;
         }
-        
+
         return alumnos;
     }
 
-    public List<Alumno> LecturaArchivoXLSX(File archivo){
+    public List<Alumno> LecturaArchivoXLSX(File archivo) {
         List<Alumno> alumnos = null;
-        
-        try (InputStream inputStream = new FileInputStream(archivo);
-                XSSFWorkbook workbook = new XSSFWorkbook(inputStream)){
-            
+
+        try (InputStream inputStream = new FileInputStream(archivo); XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
+
             XSSFSheet sheet = workbook.getSheetAt(0);
-            
+
             alumnos = new ArrayList<>();
-            
+
             for (Row row : sheet) {
                 Alumno alumno = new Alumno();
-                
+
                 alumno.setNombre(row.getCell(0).toString());
                 alumno.setApellidoPaterno(row.getCell(1).toString());
-                
+
                 alumnos.add(alumno);
             }
-            
+
         } catch (Exception ex) {
         }
-        
+
         return alumnos;
     }
-    
+
     public List<ErroresArchivo> ValidarDatos(List<Alumno> alumnos) {
         List<ErroresArchivo> errores = new ArrayList<>();
-        
+        int fila = 0;
         for (Alumno alumno : alumnos) {
             BindingResult bindingResult = validationService.ValidateObject(alumno);
-            
+            fila++;
             if (bindingResult.hasErrors()) {
                 for (ObjectError objectError : bindingResult.getAllErrors()) {
-                    ErroresArchivo erroresArchivo = new ErroresArchivo();
+                    ErroresArchivo errorCarga = new ErroresArchivo();
 //                    erroresArchivo.dato = objectError.getObjectName();
+                    FieldError fieldError = (FieldError) objectError;
+                    errorCarga.dato = fieldError.getField();
+                    errorCarga.descripcion = fieldError.getDefaultMessage();
+                    errorCarga.fila = fila;
+                    errores.add(errorCarga);
                 }
             }
-            
-        
+
         }
-        
-        
-        
-        
+
         return errores;
     }
 

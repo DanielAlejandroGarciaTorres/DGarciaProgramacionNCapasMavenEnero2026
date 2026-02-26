@@ -1,0 +1,5 @@
+nombre|apellidoPaterno|apellidoMaterno
+Sebastian|Cruz|López
+Daniel Alejandro|Trejo|Molina
+Adalberto|Salinas|Jose
+Eliel Jair|Flores|Dominguez

@@ -7,10 +7,12 @@ import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Semestre;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository // manejo de logica de base datos
 public class AlumnoDAOImplementation implements IAlumno {
@@ -91,4 +93,28 @@ public class AlumnoDAOImplementation implements IAlumno {
 
 //    @Autowired // Inyección de dependencias
 //    private JdbcTemplate jdbcTemplate; // inyección de campo / field injection
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Result AddAll(List<Alumno> alumnos) {
+        Result result = new Result();
+        
+        try{
+            
+            jdbcTemplate.batchUpdate("{CALL AlumnoDireccionAdd(?,?,?,?,?,?)}",
+                    alumnos,
+                    alumnos.size(),
+                    (callableStatement, alumno) -> {
+                        callableStatement.setString(1, alumno.getNombre());
+                        callableStatement.setString(2, alumno.getApellidoPaterno());
+ 
+                    });
+            result.correct = true;
+        
+        } catch (Exception ex){
+            result.correct = false;
+        }
+        
+        return result;
+    }
 }
