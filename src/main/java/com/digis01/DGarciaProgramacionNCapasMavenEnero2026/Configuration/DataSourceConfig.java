@@ -1,4 +1,4 @@
-package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Configuration;
+    package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Configuration;
 
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;

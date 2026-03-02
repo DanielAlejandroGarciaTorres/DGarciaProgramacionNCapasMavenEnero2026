@@ -1,6 +1,7 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.Controller;
 
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.AlumnoDAOImplementation;
+import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.AlumnoDAOJPAImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.DAO.PaisDAOImplementation;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno;
 import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.ErroresArchivo;
@@ -50,6 +51,9 @@ public class AlumnoController {
     // injection paisDAOImplementation
     @Autowired
     private AlumnoDAOImplementation alumnoDAOImplementation;
+    
+    @Autowired
+    private AlumnoDAOJPAImplementation alumnoDAOJPAImplementation;
 
     @Autowired
     private PaisDAOImplementation paisDAOImplementation;
@@ -60,6 +64,8 @@ public class AlumnoController {
     @GetMapping //localhost:8080/alumno
     public String Index(Model model) {
 
+        alumnoDAOJPAImplementation.GetAll();
+        
         Result result = alumnoDAOImplementation.GetAll();
         model.addAttribute("alumnos", result.objects);
         model.addAttribute("alumnoBusqueda", new Alumno());
