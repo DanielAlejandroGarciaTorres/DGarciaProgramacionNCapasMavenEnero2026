@@ -64,6 +64,7 @@ public class AlumnoController {
     @GetMapping //localhost:8080/alumno
     public String Index(Model model) {
 
+        alumnoDAOJPAImplementation.Add(new Alumno());
         alumnoDAOJPAImplementation.GetAll();
         
         Result result = alumnoDAOImplementation.GetAll();

@@ -1,13 +1,24 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.JPA;
 
-import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
-
+@Entity
 public class Municipio {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idmunicipio")
     private int IdMunicipio;
+    @Column(name = "nombre")
     private String Nombre;
-    public com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Estado Estado;
+    @ManyToOne
+    @JoinColumn(name = "idestado")
+    public Estado Estado;
 
     public int getIdMunicipio() {
         return IdMunicipio;

@@ -1,21 +1,32 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.JPA;
 
-import com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.*;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Direccion {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "iddireccion")
     private int IdDireccion;
+    @Column(name = "calle")
     private String Calle;
+    @Column(name = "numerointerior")
     private String NumeroInterior;
+    @Column(name = "numeroexterior")
     private String NumeroExterior;
     @ManyToOne
     @JoinColumn(name = "idcolonia")
     public Colonia Colonia;
-//    public Alumno Alumno;
+    @ManyToOne(fetch = FetchType.LAZY) //carga peresoza - proxy
+    @JoinColumn(name = "idalumno")
+    public Alumno Alumno;
     
     // alumno
     public int getIdDireccion() {

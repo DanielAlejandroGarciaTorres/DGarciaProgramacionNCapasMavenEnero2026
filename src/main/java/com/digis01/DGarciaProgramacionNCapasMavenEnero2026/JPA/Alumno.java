@@ -1,12 +1,15 @@
 package com.digis01.DGarciaProgramacionNCapasMavenEnero2026.JPA;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -43,9 +46,12 @@ public class Alumno {
     @JoinColumn(name = "idsemestre") // FK
     public Semestre Semestre; 
     //
-//    public List<Direccion> Direcciones;
-//    //Lob
-//    public String Imagen;
+    @OneToMany(mappedBy = "Alumno", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Direccion> Direcciones;
+    
+    @Column(name = "imagen")
+    @Lob
+    public String Imagen;
 
     public Alumno() {
     }
@@ -128,21 +134,21 @@ public class Alumno {
         return Semestre;
     }
 
-//    public List<Direccion> getDirecciones() {
-//        return Direcciones;
-//    }
-//
-//    public void setDirecciones(List<Direccion> Direcciones) {
-//        this.Direcciones = Direcciones;
-//    }
-//
-//    public String getImagen() {
-//        return Imagen;
-//    }
-//
-//    public void setImagen(String Imagen) {
-//        this.Imagen = Imagen;
-//    }
+    public List<Direccion> getDirecciones() {
+        return Direcciones;
+    }
+
+    public void setDirecciones(List<Direccion> Direcciones) {
+        this.Direcciones = Direcciones;
+    }
+
+    public String getImagen() {
+        return Imagen;
+    }
+
+    public void setImagen(String Imagen) {
+        this.Imagen = Imagen;
+    }
 
     
 }
