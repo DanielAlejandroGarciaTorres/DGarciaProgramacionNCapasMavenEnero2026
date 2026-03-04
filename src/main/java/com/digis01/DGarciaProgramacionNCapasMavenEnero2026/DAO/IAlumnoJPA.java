@@ -7,4 +7,7 @@ public interface IAlumnoJPA {
 
     Result GetAll();
     Result Add(Alumno alumno);
+    Result GetById(int idAlumno);
+    Result Update(Alumno alumno);
+    Result Delete(int idAlumno);
 }

@@ -82,5 +82,72 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
         
         return result;
     }
+
+    @Override
+    public Result GetById(int idAlumno) {
+        Result result = new Result();
+        try{
+            Alumno alumno = entityManager.find(Alumno.class, idAlumno);
+            // jpa -> Ml
+        }catch(Exception ex){
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Result Update(com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno alumno) {
+         Result result = new Result();
+        try{
+            Alumno alumnoBD = entityManager.find(Alumno.class, alumno.getIdAlumno());
+            if (alumno != null) { // alumno si existe
+                //ML -> JPA
+                Alumno alumnoJPA = new Alumno();
+                alumnoJPA.Direcciones = alumnoBD.Direcciones;
+                entityManager.merge(alumnoJPA);
+            }
+        }catch(Exception ex){
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Result Delete(int idAlumno) {
+        Result result = new Result();
+        try{
+            Alumno alumno = entityManager.find(Alumno.class, idAlumno);
+            if (alumno != null) {
+                entityManager.remove(alumno);
+                result.correct = true;
+            } else {
+                result.correct = false;
+                result.errorMessage = "No se encontro el recurso";
+            }
+        }catch(Exception ex){
+        }
+        return result;
+    }
+    
+    
+    public com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno AlumnoJPAtoML(Alumno alumno){
+        com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno alumnoML = new com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno();
+        
+        alumnoML.setIdAlumno(alumno.getIdAlumno());
+        
+        return alumnoML;
+    }
+    
+    public Alumno AlumnoMLtoJPA (com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno alumnoML){
+        Alumno alumnoJPA = new Alumno();
+        
+        alumnoJPA.setIdAlumno(alumnoML.getIdAlumno());
+        
+//        for (Direccion Direccione : alumnoJPA.Direcciones) {
+//            alumnoJPA.Direcciones.add(new Direc)
+//        }
+        
+        return alumnoJPA;
+    }
     
 }
