@@ -22,6 +22,7 @@ public class Alumno {
     private String Telefono;
     
     private String Email;
+    private String Password;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
     @Valid
@@ -126,5 +127,14 @@ public class Alumno {
         this.Imagen = Imagen;
     }
 
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
+    }
+
+    
     
 }

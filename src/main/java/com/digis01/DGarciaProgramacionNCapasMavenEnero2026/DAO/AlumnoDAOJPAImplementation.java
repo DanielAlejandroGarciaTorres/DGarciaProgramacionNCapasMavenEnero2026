@@ -149,5 +149,28 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
         
         return alumnoJPA;
     }
+
+    @Override
+    public Result GetByEmail(String Email) {
+        Result result = new Result();
+        
+        try {
+            
+            TypedQuery<Alumno> queryAlumno = entityManager.createQuery("FROM Alumno WHERE Email = :pEmail", Alumno.class);
+            queryAlumno.setParameter("pEmail", Email);
+            Alumno alumno = queryAlumno.getSingleResult();
+            
+            /*JPA -> ML*/
+            
+            result.object = alumno;
+            result.correct = true;
+            
+            
+        }catch(Exception ex){
+            
+        }
+        
+        return result;
+    }
     
 }
