@@ -39,6 +39,10 @@ public class Alumno {
     private String Telefono;
     @Column(name = "email")
     private String Email;
+    @Column(name = "password")
+    private String Password;
+    @Column(name = "status")
+    private int Status;
 //    @Column(name = "apellidopaterno")
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
 //    private Date FechaNacimiento;
@@ -150,6 +154,23 @@ public class Alumno {
         this.Imagen = Imagen;
     }
 
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
+    }
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public void setStatus(int Status) {
+        this.Status = Status;
+    }
+
+    
     
 }
 

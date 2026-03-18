@@ -28,8 +28,10 @@ public class Alumno {
     @Valid
     public Semestre Semestre; 
     public List<Direccion> Direcciones;
-    public String Imagen;
-
+    private String Imagen;
+    private int Status;
+    
+    
     public Alumno() {
     }
 
@@ -133,6 +135,14 @@ public class Alumno {
 
     public void setPassword(String Password) {
         this.Password = Password;
+    }
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public void setStatus(int Status) {
+        this.Status = Status;
     }
 
     

@@ -134,18 +134,35 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
         com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno alumnoML = new com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno();
         
         alumnoML.setIdAlumno(alumno.getIdAlumno());
+        alumnoML.setNombre(alumno.getNombre());
+        alumnoML.setApellidoPaterno(alumno.getApellidoPaterno());
+        alumnoML.setApellidoMaterno(alumno.getApellidoMaterno());
+        alumnoML.setTelefono(alumno.getTelefono());
+        alumnoML.setEmail(alumno.getEmail());
+        alumnoML.setPassword(alumno.getPassword());
+        alumnoML.setStatus(alumno.getStatus());
+        alumnoML.Semestre = new com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Semestre();
+        alumnoML.Semestre.setIdSemestre(alumno.Semestre.getIdSemestre());
+        alumnoML.Semestre.setNombre(alumno.Semestre.getNombre());
         
         return alumnoML;
     }
     
-    public Alumno AlumnoMLtoJPA (com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno alumnoML){
+    public Alumno AlumnoMLtoJPA (com.digis01.DGarciaProgramacionNCapasMavenEnero2026.ML.Alumno alumno){
+        
         Alumno alumnoJPA = new Alumno();
         
-        alumnoJPA.setIdAlumno(alumnoML.getIdAlumno());
-        
-//        for (Direccion Direccione : alumnoJPA.Direcciones) {
-//            alumnoJPA.Direcciones.add(new Direc)
-//        }
+        alumnoJPA.setIdAlumno(alumno.getIdAlumno());
+        alumnoJPA.setNombre(alumno.getNombre());
+        alumnoJPA.setApellidoPaterno(alumno.getApellidoPaterno());
+        alumnoJPA.setApellidoMaterno(alumno.getApellidoMaterno());
+        alumnoJPA.setTelefono(alumno.getTelefono());
+        alumnoJPA.setEmail(alumno.getEmail());
+        alumnoJPA.setPassword(alumno.getPassword());
+        alumnoJPA.setStatus(alumno.getStatus());
+        alumnoJPA.Semestre = new Semestre();
+        alumnoJPA.Semestre.setIdSemestre(alumno.Semestre.getIdSemestre());
+        alumnoJPA.Semestre.setNombre(alumno.Semestre.getNombre());
         
         return alumnoJPA;
     }
@@ -162,7 +179,7 @@ public class AlumnoDAOJPAImplementation implements IAlumnoJPA{
             
             /*JPA -> ML*/
             
-            result.object = alumno;
+            result.object = AlumnoJPAtoML(alumno);
             result.correct = true;
             
             
