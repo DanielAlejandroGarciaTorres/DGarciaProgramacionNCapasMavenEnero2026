@@ -46,7 +46,7 @@ public class SecurityConfiguration {
                 .failureUrl("/login?error=true")
                 )
                 .userDetailsService(userDetailJPA);
-
+        //JSESSIONID
         return http.build();
     }
 
